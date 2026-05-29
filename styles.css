@@ -658,14 +658,15 @@ footer {
   position: fixed;
   width: 60px;
   height: 60px;
-  bottom: 115px; /* Placed exactly above the WhatsApp button */
+  bottom: 115px;
+  /* Placed exactly above the WhatsApp button */
   right: 40px;
   background-color: var(--primary-color);
   color: white;
   border-radius: 50%;
   border: none;
   font-size: 24px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -746,8 +747,10 @@ footer {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 43px; /* Just under half of 90px */
-  height: 34px; /* 40px height minus 6px padding */
+  width: 43px;
+  /* Just under half of 90px */
+  height: 34px;
+  /* 40px height minus 6px padding */
   background-color: var(--primary-color);
   border-radius: 17px;
   z-index: 1;
@@ -1196,7 +1199,7 @@ footer {
   padding: 12px 24px;
   border-radius: 30px;
   font-weight: 600;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -1310,7 +1313,8 @@ footer {
     right: 20px;
     width: auto;
     bottom: 20px;
-    z-index: 2100; /* Float higher on mobile */
+    z-index: 2100;
+    /* Float higher on mobile */
   }
 }
 
@@ -1574,11 +1578,30 @@ footer {
   display: inline-block;
 }
 
-.admin-table-badge.leafy { background: #e8f5e9; color: #2e7d32; }
-.admin-table-badge.root { background: #efebe9; color: #5d4037; }
-.admin-table-badge.seasonal { background: #fff3e0; color: #f57c00; }
-.admin-table-badge.organic { background: #e1f5fe; color: #0288d1; }
-.admin-table-badge.fruits { background: #fce4ec; color: #c2185b; }
+.admin-table-badge.leafy {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.admin-table-badge.root {
+  background: #efebe9;
+  color: #5d4037;
+}
+
+.admin-table-badge.seasonal {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.admin-table-badge.organic {
+  background: #e1f5fe;
+  color: #0288d1;
+}
+
+.admin-table-badge.fruits {
+  background: #fce4ec;
+  color: #c2185b;
+}
 
 .admin-stock-indicator {
   display: inline-flex;
@@ -1665,7 +1688,7 @@ footer {
   max-width: 600px;
   width: 90%;
   position: relative;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
   transform: translateY(-20px);
   transition: transform 0.3s ease;
 }
@@ -1770,11 +1793,11 @@ footer {
   border-radius: 50%;
 }
 
-.stock-toggle input:checked + .stock-slider {
+.stock-toggle input:checked+.stock-slider {
   background-color: var(--primary-color);
 }
 
-.stock-toggle input:checked + .stock-slider:before {
+.stock-toggle input:checked+.stock-slider:before {
   transform: translateX(24px);
 }
 
@@ -1801,7 +1824,7 @@ footer {
   text-transform: uppercase;
   z-index: 10;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-card.out-of-stock .btn-add-basket {
@@ -1843,13 +1866,18 @@ footer {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
   animation: bannerShimmer 8s linear infinite;
 }
 
 @keyframes bannerShimmer {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .ordering-window-banner.closed {
@@ -1875,8 +1903,17 @@ footer {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.85); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
 }
 
 .ordering-window-banner.closed .banner-status-dot {
@@ -2031,7 +2068,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-badge.fresh-harvest {
@@ -2051,8 +2088,15 @@ footer {
 }
 
 @keyframes badgePulse {
-  0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-  50% { box-shadow: 0 2px 16px rgba(230, 81, 0, 0.4); }
+
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 2px 16px rgba(230, 81, 0, 0.4);
+  }
 }
 
 /* ==========================================================================
@@ -2335,7 +2379,7 @@ footer {
   .admin-dashboard-overlay {
     padding: 10px;
   }
-  
+
   .admin-dashboard-container {
     padding: 15px;
   }
@@ -2380,8 +2424,15 @@ footer {
 }
 
 @keyframes floatSeedling {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .empty-category-state h4 {

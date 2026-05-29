@@ -12,6 +12,7 @@ const firebaseConfig = {
 let db = null;
 let auth = null;
 let useFirebase = false;
+let activeTrackListener = null;
 
 // GA4 Custom Telemetry Helper
 function trackGA4Event(eventName, eventParams = {}) {
@@ -55,8 +56,8 @@ function getQuantityOptions(product) {
 // ===== Phase 1: Basket Tier Configuration =====
 const BASKET_TIERS = [
     { id: 'farmplus', name: 'Large Basket', nameTE: 'లార్జ్ బాస్కెట్', minItems: 11, discount: 0.15, icon: '🌾', cssClass: 'tier-farmplus' },
-    { id: 'weekly',   name: 'Medium Basket',    nameTE: 'మీడియం బాస్కెట్',          minItems: 8,  discount: 0.10, icon: '🧺', cssClass: 'tier-weekly' },
-    { id: 'family',   name: 'Small Basket',    nameTE: 'స్మాల్ బాస్కెట్',       minItems: 5,  discount: 0.05, icon: '🏠', cssClass: 'tier-family' },
+    { id: 'weekly', name: 'Medium Basket', nameTE: 'మీడియం బాస్కెట్', minItems: 8, discount: 0.10, icon: '🧺', cssClass: 'tier-weekly' },
+    { id: 'family', name: 'Small Basket', nameTE: 'స్మాల్ బాస్కెట్', minItems: 5, discount: 0.05, icon: '🏠', cssClass: 'tier-family' },
 ];
 
 // ===== Phase 1: Ordering Window Schedule =====
@@ -83,7 +84,8 @@ let products = [
         unit: "bunch",
         image: "images/spinach.webp",
         inStock: true,
-        badge: "fresh_harvest"
+        badge: "fresh_harvest",
+        farmerId: 2
     },
     {
         id: 2,
@@ -95,7 +97,8 @@ let products = [
         unit: "kg",
         image: "images/carrots.webp",
         inStock: true,
-        badge: ""
+        badge: "",
+        farmerId: 1
     },
     {
         id: 3,
@@ -728,6 +731,36 @@ function applyLanguage() {
     if (recResumeBtn) recResumeBtn.textContent = dict.recoveryBtnResume;
 }
 
+// Convert GitHub HTML blob image URLs to raw viewable URLs
+function cleanGitHubImageUrl(url) {
+    if (!url) return '';
+    let cleanUrl = url.trim();
+    
+    // Convert github.com/.../blob/... to raw.githubusercontent.com/...
+    const githubRegex = /^https?:\/\/(www\.)?github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/i;
+    const match = cleanUrl.match(githubRegex);
+    if (match) {
+        const username = match[2];
+        const repo = match[3];
+        const branch = match[4];
+        const path = match[5];
+        return `https://raw.githubusercontent.com/${username}/${repo}/${branch}/${path}`;
+    }
+    
+    // Convert github.com/.../raw/... to raw.githubusercontent.com/...
+    const githubRawRegex = /^https?:\/\/(www\.)?github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/i;
+    const rawMatch = cleanUrl.match(githubRawRegex);
+    if (rawMatch) {
+        const username = rawMatch[2];
+        const repo = rawMatch[3];
+        const branch = rawMatch[4];
+        const path = rawMatch[5];
+        return `https://raw.githubusercontent.com/${username}/${repo}/${branch}/${path}`;
+    }
+    
+    return cleanUrl;
+}
+
 function getTranslatedProduct(product) {
     const dict = translations[currentLang];
     let name = product.name;
@@ -754,7 +787,9 @@ function getTranslatedProduct(product) {
     else if (product.unit === 'pc') { unit = dict.unitPc; }
     else if (product.unit === 'dozen') { unit = dict.unitDozen; }
 
-    return { ...product, name, unit };
+    const image = cleanGitHubImageUrl(product.image);
+
+    return { ...product, name, unit, image };
 }
 
 const filterBtns = document.querySelectorAll('.filter-btn');
@@ -1231,7 +1266,7 @@ function updateCartUI() {
                 };
                 const tierName = tierNames[currentTier.id] || currentTier.name;
                 nameEl.textContent = tierName;
-                
+
                 const suitabilityEl = document.getElementById('basketTierSuitability');
                 if (suitabilityEl) {
                     suitabilityEl.textContent = (dict.basketSuitability || '')
@@ -1894,7 +1929,12 @@ function saveProduct(e) {
     const unit = document.getElementById('prodUnit').value;
     const badge = document.getElementById('prodBadge').value;
     const price = parseInt(document.getElementById('prodPrice').value);
-    const imageUrl = document.getElementById('prodImageUrl').value;
+    
+    // Clean and validate GitHub image URLs if inputted
+    const rawImageUrl = document.getElementById('prodImageUrl').value;
+    const imageUrl = cleanGitHubImageUrl(rawImageUrl);
+    document.getElementById('prodImageUrl').value = imageUrl;
+    
     const inStock = document.getElementById('prodInStock').checked;
 
     const formattedPrice = `₹${price}`;
@@ -2163,3 +2203,136 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ==========================================================================
+// Phase 3: Interactive Order Progress Tracking Portal logic
+// ==========================================================================
+
+function openTrackOrderModal(e) {
+    if (e) e.preventDefault();
+    const modal = document.getElementById('trackOrderModal');
+    if (modal) {
+        modal.classList.add('open');
+        
+        // Auto pre-populate with user's most recent order code if exists
+        const myOrders = JSON.parse(localStorage.getItem('kshetriva_my_orders') || '[]');
+        if (myOrders.length > 0) {
+            document.getElementById('trackInput').value = myOrders[myOrders.length - 1];
+            trackOrderQuery(); // Auto search
+        }
+        document.getElementById('trackInput').focus();
+    }
+}
+
+function closeTrackOrderModal() {
+    const modal = document.getElementById('trackOrderModal');
+    if (modal) {
+        modal.classList.remove('open');
+    }
+    // Unsubscribe from active real-time queries to save resources
+    if (typeof activeTrackListener === 'function') {
+        activeTrackListener();
+        activeTrackListener = null;
+    }
+}
+
+function trackOrderQuery() {
+    const inputVal = document.getElementById('trackInput').value.trim();
+    const errorEl = document.getElementById('trackErrorMsg');
+    const containerEl = document.getElementById('trackResultContainer');
+    if (!inputVal) return;
+
+    errorEl.style.display = 'none';
+
+    // Unsubscribe previous tracking listener
+    if (typeof activeTrackListener === 'function') {
+        activeTrackListener();
+        activeTrackListener = null;
+    }
+
+    if (useFirebase && db) {
+        // Query live Firestore document with active snapshot listener
+        activeTrackListener = db.collection("orders").doc(inputVal).onSnapshot((doc) => {
+            if (doc.exists) {
+                renderTimelineProgress(doc.data());
+            } else {
+                containerEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        }, (error) => {
+            console.error("Firestore tracking listener exception:", error);
+            errorEl.style.display = 'block';
+        });
+    } else {
+        // Offline sandbox local storage tracker query
+        const queryLocal = () => {
+            const localOrders = JSON.parse(localStorage.getItem('kshetriva_mithra_orders') || '[]');
+            const order = localOrders.find(o => o.id === inputVal);
+            if (order) {
+                renderTimelineProgress(order);
+            } else {
+                containerEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        };
+
+        queryLocal();
+
+        // Listen for storage updates in local fallback mode
+        const onLocalStorageUpdate = (e) => {
+            if (e.key === 'kshetriva_mithra_orders_update' || e.key === 'kshetriva_mithra_orders') {
+                queryLocal();
+            }
+        };
+        window.addEventListener('storage', onLocalStorageUpdate);
+
+        activeTrackListener = () => {
+            window.removeEventListener('storage', onLocalStorageUpdate);
+        };
+    }
+}
+
+function renderTimelineProgress(order) {
+    const containerEl = document.getElementById('trackResultContainer');
+    const resultIdEl = document.getElementById('trackResultId');
+    const resultDateEl = document.getElementById('trackResultDate');
+    const resultTotalEl = document.getElementById('trackResultTotal');
+    const fillEl = document.getElementById('timelineFill');
+
+    resultIdEl.textContent = order.id;
+    resultDateEl.textContent = order.date;
+    resultTotalEl.textContent = `₹${order.totalSum}`;
+
+    containerEl.style.display = 'block';
+
+    const steps = ['harvesting', 'packed', 'delivery', 'delivered'];
+    const currentStatus = order.status || 'harvesting';
+    const activeIndex = steps.indexOf(currentStatus);
+
+    steps.forEach((step, idx) => {
+        const stepEl = document.getElementById(`step-${step}`);
+        if (stepEl) {
+            stepEl.classList.remove('completed', 'active');
+            if (idx < activeIndex) {
+                stepEl.classList.add('completed');
+            } else if (idx === activeIndex) {
+                stepEl.classList.add('active');
+            }
+        }
+    });
+
+    // Calculate progress line percentage fill
+    let fillPct = 0;
+    if (activeIndex > 0) {
+        fillPct = (activeIndex / (steps.length - 1)) * 100;
+    }
+
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        fillEl.style.width = '4px';
+        fillEl.style.height = `${fillPct}%`;
+    } else {
+        fillEl.style.height = '4px';
+        fillEl.style.width = `${fillPct}%`;
+    }
+}

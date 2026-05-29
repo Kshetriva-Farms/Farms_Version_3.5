@@ -478,7 +478,9 @@
                     <span class="basket-badge-icon" id="basketBadgeIcon">🏠</span>
                     <div class="basket-badge-text">
                         <span class="tier-name" id="basketTierName">Small Basket</span>
-                        <span class="tier-suitability" id="basketTierSuitability" style="font-size: 0.72rem; font-weight: 500; display: block; opacity: 0.9; margin-top: 1px; color: inherit;">Small Basket is suitable for your 5 items!</span>
+                        <span class="tier-suitability" id="basketTierSuitability"
+                            style="font-size: 0.72rem; font-weight: 500; display: block; opacity: 0.9; margin-top: 1px; color: inherit;">Small
+                            Basket is suitable for your 5 items!</span>
                         <span class="tier-discount" id="basketTierDiscount">5% Discount Applied</span>
                     </div>
                 </div>
@@ -771,7 +773,7 @@
                 navigator.serviceWorker.register('./sw.js')
                     .then((reg) => {
                         console.log('🌾 Service Worker registered successfully:', reg.scope);
-                        
+
                         // Force check for updates to service worker on load
                         reg.update();
                     })
