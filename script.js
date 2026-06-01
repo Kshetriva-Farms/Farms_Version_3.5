@@ -350,7 +350,7 @@ const translations = {
         categoryComingSoonSub: "Sorry, no fresh harvest in this category today. Please check back later!",
 
         // Phase 1: Min Order
-        minOrderText: "Add {n} more item(s) to meet minimum order of 2 items",
+        minOrderText: "Minimum order: 3 products or total above ₹99 to checkout.",
 
         // Phase 1: Window Closed
         windowClosedText: "Ordering opens Thursday 9 AM. You can browse and build your cart now.",
@@ -496,7 +496,7 @@ const translations = {
         categoryComingSoon: "త్వరలో రాబోతోంది",
         categoryComingSoonSub: "క్షమించండి, ఈ విభాగంలో ఈరోజు తాజా పంట అందుబాటులో లేదు. దయచేసి తర్వాత సందర్శించండి!",
 
-        minOrderText: "కనీస ఆర్డర్ 2 వస్తువులు చేరుకోవడానికి మరో {n} వస్తువులను జోడించండి",
+        minOrderText: "కనీస ఆర్డర్: 3 ఉత్పత్తులు లేదా మొత్తం ₹99 కంటే ఎక్కువ ఉండాలి.",
         windowClosedText: "ఆర్డరింగ్ గురువారం 9 AM న తెరుచుకుంటుంది. మీరు ఇప్పుడు బ్రౌజ్ చేయవచ్చు.",
         kattaTooltip: "1 కట్ట ≈ తాజా కట్ట బండిల్",
 
@@ -1409,15 +1409,13 @@ function updateCartUI() {
 
     cartTotalSum.textContent = `₹${finalTotal}`;
 
-    // Phase 1: Minimum order check - 2 items minimum
+    // Phase 1: Minimum order check - 3 products OR total > 99
     let checkoutBlocked = false;
-    if (totalItems < 2) {
+    if (uniqueItems < 3 && finalTotal <= 99) {
         if (minOrderNotice) {
-            const itemsNeeded = 2 - totalItems;
             const textSpan = document.getElementById('minOrderText');
             if (textSpan) {
-                textSpan.innerHTML = (dict.minOrderText || "Add {n} more item(s) to meet minimum order of 2 items")
-                    .replace('{n}', itemsNeeded);
+                textSpan.textContent = dict.minOrderText || "Minimum order: 3 products or total above ₹99";
             }
             minOrderNotice.style.display = 'flex';
         }
@@ -1490,9 +1488,28 @@ function sendCartWhatsAppOrder() {
     const cartKeys = Object.keys(cart);
     if (cartKeys.length === 0) return;
 
-    // Block checkout if minimum order of 2 items is not met
-    const totalItems = Object.values(cart).reduce((sum, item) => sum + (item.qty || 0), 0);
-    if (totalItems < 2) return;
+    // Block checkout if minimum order rule is not met (at least 3 products OR final total > 99)
+    const uniqueItems = cartKeys.length;
+    let tempSubtotal = 0;
+    cartKeys.forEach(idStr => {
+        const id = parseInt(idStr);
+        const rawProduct = products.find(p => p.id === id);
+        if (rawProduct) {
+            const product = getTranslatedProduct(rawProduct);
+            const cartEntry = cart[id];
+            const qty = cartEntry.qty || 1;
+            const price = cartEntry.optionPrice || parseInt((product.price || '0').replace(/[^\d]/g, ''));
+            tempSubtotal += price * qty;
+        }
+    });
+    const currentTier = detectBasketTier(uniqueItems);
+    let tempTotal = tempSubtotal;
+    if (currentTier) {
+        const discountAmt = Math.round(tempSubtotal * currentTier.discount * 100) / 100;
+        tempTotal = Math.round((tempSubtotal - discountAmt) * 100) / 100;
+    }
+
+    if (uniqueItems < 3 && tempTotal <= 99) return;
 
     const isTe = currentLang === 'te';
     const dict = translations[currentLang];
