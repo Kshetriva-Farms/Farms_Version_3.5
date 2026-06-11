@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kshetriva-farms-cache-v14';
+const CACHE_NAME = 'kshetriva-farms-cache-v15';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

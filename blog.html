@@ -87,8 +87,8 @@
     <!-- Blog Header Section -->
     <header class="blog-hero">
         <div class="container">
-            <h1>Why Farm-Fresh Vegetables Last Longer</h1>
-            <div class="blog-meta">
+            <h1 id="blogHeroTitle">Why Farm-Fresh Vegetables Last Longer</h1>
+            <div class="blog-meta" id="blogHeroMeta">
                 <span><i class="fa-solid fa-calendar"></i> May 30, 2026</span>
                 <span><i class="fa-solid fa-user"></i> By Kshetriva Farms</span>
                 <span><i class="fa-solid fa-clock"></i> 4 Min Read</span>
@@ -97,155 +97,283 @@
         </div>
     </header>
 
+    <!-- Blog Toggle Tabs -->
+    <div class="blog-tabs-container">
+        <div class="blog-tabs">
+            <button id="tabBlog1" class="blog-tab-btn active">
+                <i class="fa-solid fa-leaf"></i> Why Farm-Fresh Vegetables Last Longer
+            </button>
+            <button id="tabBlog2" class="blog-tab-btn">
+                <i class="fa-solid fa-circle-exclamation"></i> How Much Pesticide Usage Is Safe?
+            </button>
+        </div>
+    </div>
+
     <!-- Blog Layout Section -->
     <main class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         <div class="blog-layout">
             <!-- Left Side: Main Article -->
             <article class="blog-main">
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_brand_hero.jpg"
-                        alt="Kshetriva Farms farm-fresh vegetable fields under cultivation" width="800" height="450">
-                    <div class="blog-image-caption">Kshetriva Farms — Fresh vegetables grown and harvested directly at
-                        our local farms.</div>
+                <!-- Blog Post 1: Freshness & Shelf Life -->
+                <div id="blogPost1" class="blog-post-section">
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_brand_hero.jpg"
+                            alt="Kshetriva Farms farm-fresh vegetable fields under cultivation" width="800" height="450">
+                        <div class="blog-image-caption">Kshetriva Farms — Fresh vegetables grown and harvested directly at
+                            our local farms.</div>
+                    </div>
+
+                    <p>Have you ever bought vegetables from the market and noticed they become soft or spoiled within just a
+                        few days? One of the main reasons is a lack of freshness. Vegetables that come directly from farms
+                        usually last longer because they spend less time in storage, transport, and handling before reaching
+                        your home.</p>
+
+                    <p>At Kshetriva Farms, we focus on delivering vegetables as fresh as possible so customers receive
+                        better quality produce that stays fresh for longer. We specialize in preservative-free vegetables,
+                        providing the freshest produce in Hyderabad delivered direct from farmers.</p>
+
+                    <h2 class="blog-section-title">1. Less Time Between Farm and Home</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_packing_crates.jpg"
+                            alt="Kshetriva Farms delivery box loaded with fresh, preservative-free vegetables" width="800"
+                            height="500">
+                        <div class="blog-image-caption">Kshetriva Farms packing box loaded with freshly packed greens, ready
+                            for delivery.</div>
+                    </div>
+
+                    <p>Fresh vegetables start losing freshness soon after they are harvested. In traditional markets,
+                        vegetables often travel through many stages before reaching your table:</p>
+
+                    <div class="blog-quote"
+                        style="border-left-color: var(--primary-color); background-color: rgba(46,125,50,0.02); font-style: normal; font-weight: normal;">
+                        <strong style="color: var(--primary-color);">Traditional Sourcing Chain:</strong><br>
+                        Farmer &rarr; Wholesale Market &rarr; Storage &rarr; Retail Shop &rarr; Customer
+                    </div>
+
+                    <p>This traditional process can take several days. By the time the vegetables reach your kitchen, they
+                        may already be losing moisture, flavor, and essential nutrients. Farm-fresh vegetables reach
+                        customers much faster, which directly helps them stay fresh for more days in your refrigerator.</p>
+
+                    <div class="blog-link-wrapper">
+                        <a href="index.html#products" class="blog-internal-link" id="blogCtaLink1">
+                            Browse our fresh, farm-to-table catalog <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <h2 class="blog-section-title">2. Less Handling Means Less Damage</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_hand_tomatoes.jpg"
+                            alt="Kshetriva Farms quality control expert carefully inspecting harvested crops to prevent handling damage"
+                            width="800" height="500">
+                        <div class="blog-image-caption">Every single item is thoroughly inspected by the Kshetriva Farms
+                            quality team to minimize handling damage.</div>
+                    </div>
+
+                    <p>Vegetables become damaged when they are handled too many times during loading, unloading, and
+                        transport. Even small scratches, pressure marks, or bruising can break the vegetable's protective
+                        outer skin, making them spoil and mold much faster.</p>
+
+                    <p>Farm-fresh vegetables usually go through fewer middle steps, meaning less physical handling. Because
+                        we deliver direct, they stay:</p>
+                    <ul class="blog-list">
+                        <li>Cleaner and untouched by dozens of hands</li>
+                        <li>Fresher due to minimal atmospheric exposure</li>
+                        <li>Firmer with no bruising from rough sorting</li>
+                        <li>Healthier and visually pristine</li>
+                    </ul>
+                    <p>Fewer touchpoints dramatically minimize transport shock and maintain the vegetable's natural quality.
+                    </p>
+
+                    <h2 class="blog-section-title">3. Better Moisture and Natural Freshness</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_market_cart.jpg"
+                            alt="Crisp and juicy vegetables from Kshetriva Farms showing natural hydration" width="800"
+                            height="500">
+                        <div class="blog-image-caption">Farm-fresh greens from Kshetriva Farms naturally retain high
+                            moisture levels.</div>
+                    </div>
+
+                    <p>Freshly harvested vegetables naturally contain more moisture. This is why farm-fresh vegetables often
+                        look:</p>
+                    <ul class="blog-list">
+                        <li>Bright in color</li>
+                        <li>Crisp to the touch</li>
+                        <li>Juicy inside</li>
+                        <li>Full of life and natural flavor</li>
+                    </ul>
+                    <p>When vegetables stay in cold storage or open baskets for long periods, they slowly dehydrate and lose
+                        water. That’s why older vegetables become soft, wrinkled, and dry very quickly once you buy them.
+                        Farm-fresh vegetables retain their natural hydration, extending their shelf-life at home.</p>
+
+                    <h2 class="blog-section-title">4. Proper Selection Improves Shelf Life</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_farmer_pick.png"
+                            alt="Farmers harvesting crops at Kshetriva Farms to ensure proper selection" width="800"
+                            height="500">
+                        <div class="blog-image-caption">Farmers at Kshetriva Farms harvesting crops at peak ripeness to
+                            optimize shelf life.</div>
+                    </div>
+
+                    <p>At Kshetriva Farms, vegetables are carefully selected before delivery. Our harvesting and packaging
+                        processes ensure that only high-quality produce is packed for delivery. Good-quality, unblemished
+                        vegetables naturally stay fresh for longer when stored properly at home. Fresh produce also helps
+                        families reduce food waste because they can use the vegetables over several days without quick
+                        spoilage.</p>
+
+                    <h2 class="blog-section-title">5. Better for Health and Daily Cooking</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_cooking_fresh.png"
+                            alt="Preservative-free red tomatoes from Kshetriva Farms, ready for daily cooking" width="800"
+                            height="500">
+                        <div class="blog-image-caption">Bright, ripe, and preservative-free vegetables from Kshetriva Farms,
+                            perfect for healthy daily cooking.</div>
+                    </div>
+
+                    <p>When vegetables stay fresh longer, they transform your daily dining experience:</p>
+                    <ul class="blog-list">
+                        <li>Meals taste noticeably better and more vibrant</li>
+                        <li>Cooking becomes easier and more satisfying with crisp ingredients</li>
+                        <li>Nutrients and vitamins are better maintained and digested</li>
+                        <li>Families waste less food, saving money and helping the environment</li>
+                    </ul>
+                    <p>Ultimately, choosing fresh vegetables improves both health and convenience for the entire household.
+                    </p>
+
+                    <h2 class="blog-section-title">Conclusion</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/logo_nav_new.png" alt="Kshetriva Farms Logo"
+                            style="max-height: 140px; width: auto;">
+                        <div class="blog-image-caption">Kshetriva Farms — Better quality. Preservative-free. Longer
+                            freshness.</div>
+                    </div>
+
+                    <div class="blog-quote">
+                        "Choosing fresh vegetables is not only good for taste and health—it also helps reduce waste and
+                        improves your daily cooking experience."
+                    </div>
+                    <p>Farm-fresh vegetables last longer because they reach customers faster, go through less handling, and
+                        maintain their natural moisture and freshness. At Kshetriva Farms, we are committed to bringing
+                        fresh vegetables direct from farmers to your doorstep in Hyderabad, ensuring preservative-free
+                        quality and care.</p>
+
+                    <p style="font-weight: 700; color: var(--primary-color); text-align: center; font-size: 1.2rem; margin-top: 30px;">
+                        🌱 Fresh vegetables. Better quality. Longer freshness. 🌱
+                    </p>
+
+                    <div class="blog-link-wrapper" style="margin-top: 40px; background-color: rgba(245, 124, 0, 0.05); border-left-color: var(--accent-color);">
+                        <a href="#pesticides" class="blog-internal-link" id="linkToBlog2" style="color: var(--accent-color);">
+                            Read: How Much Pesticide Usage Is Safe in Vegetables? <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
 
-                <p>Have you ever bought vegetables from the market and noticed they become soft or spoiled within just a
-                    few days? One of the main reasons is a lack of freshness. Vegetables that come directly from farms
-                    usually last longer because they spend less time in storage, transport, and handling before reaching
-                    your home.</p>
+                <!-- Blog Post 2: Pesticide Safety -->
+                <div id="blogPost2" class="blog-post-section" style="display: none;">
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_fresh_dew.png"
+                            alt="Fresh green leaves with morning dew at Kshetriva Farms" width="800" height="450">
+                        <div class="blog-image-caption">Fresh, green crops under cultivation — natural and safe farming starts with the soil.</div>
+                    </div>
 
-                <p>At Kshetriva Farms, we focus on delivering vegetables as fresh as possible so customers receive
-                    better quality produce that stays fresh for longer. We specialize in preservative-free vegetables,
-                    providing the freshest produce in Hyderabad delivered direct from farmers.</p>
+                    <p>Today, many people are becoming more conscious about the food they eat. One common question customers ask is: <strong>“How much pesticide usage is actually safe in vegetables?”</strong></p>
 
-                <h2 class="blog-section-title">1. Less Time Between Farm and Home</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_packing_crates.jpg"
-                        alt="Kshetriva Farms delivery box loaded with fresh, preservative-free vegetables" width="800"
-                        height="500">
-                    <div class="blog-image-caption">Kshetriva Farms packing box loaded with freshly packed greens, ready
-                        for delivery.</div>
+                    <p>At Kshetriva Farms, we believe customers deserve clear and honest information about how vegetables are grown and how pesticide usage affects both farmers and consumers. We aim to raise awareness and support safe, sustainable agriculture practices.</p>
+
+                    <h2 class="blog-section-title">1. What Are Pesticides?</h2>
+                    <p>Pesticides are chemicals used in farming to protect crops from insects, fungal diseases, weeds, and harmful pests. Without crop protection, farmers can lose a large portion of their vegetables due to pest attacks and diseases. Pesticides help farmers improve:</p>
+                    <ul class="blog-list">
+                        <li>Crop survival rate</li>
+                        <li>Vegetable visual quality</li>
+                        <li>Overall yield</li>
+                        <li>Market supply stability</li>
+                    </ul>
+                    <p>However, the real concern begins when pesticides are used improperly, excessively, or without following standard guidelines.</p>
+
+                    <h2 class="blog-section-title">2. Is Any Amount of Pesticide Safe?</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_quality_control.png"
+                            alt="Quality checking and testing vegetables at Kshetriva Farms" width="800" height="500">
+                        <div class="blog-image-caption">Kshetriva Farms — Strict quality controls and testing ensure residue levels remain within safe bounds.</div>
+                    </div>
+                    <p>There is no single “safe quantity” that applies to all vegetables. Different vegetables and pesticides have different safety limits. Food safety authorities set something called a <strong>Maximum Residue Limit (MRL)</strong>.</p>
+                    <p>MRL represents the maximum amount of pesticide residue legally allowed to remain on food after harvest. When farmers use pesticides properly and follow safety guidelines, residue levels are usually kept well within acceptable, harmless limits. The major health risks mostly happen when:</p>
+                    <ul class="blog-list">
+                        <li>Pesticides are overused or sprayed in incorrect ratios</li>
+                        <li>Banned or highly toxic chemicals are used</li>
+                        <li>Vegetables are harvested too soon after spraying</li>
+                        <li>Farmers do not follow proper waiting periods before harvesting</li>
+                    </ul>
+
+                    <h2 class="blog-section-title">3. The Importance of Waiting Period After Spraying</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_farmer_pick.png"
+                            alt="Farmer picking vegetables after the proper pre-harvest interval" width="800" height="500">
+                        <div class="blog-image-caption">Our local growers wait for the proper pre-harvest intervals before picking vegetables.</div>
+                    </div>
+                    <p>One of the most important farming practices is the <strong>Pre-Harvest Interval (PHI)</strong>. This is the number of days farmers should wait between spraying pesticides and harvesting vegetables. During this waiting period, sunlight, air, and natural plant processes help break down and reduce pesticide residue levels to safe or undetectable levels.</p>
+                    <p>Depending on the chemical used, the waiting period may range from 3 days, 7 days, to 15 days or more. Harvesting vegetables immediately after spraying can leave higher chemical residues on the produce, which is unsafe for consumption.</p>
+
+                    <h2 class="blog-section-title">4. How Excessive Pesticide Usage Affects Consumers</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_delivery_box.png"
+                            alt="Kshetriva Farms delivery box loaded with safe, chemical-free vegetables" width="800" height="500">
+                        <div class="blog-image-caption">Kshetriva Farms delivers chemical-safe produce directly from Maryala farms to families in Hyderabad.</div>
+                    </div>
+                    <p>Improper pesticide usage can affect consumers in several ways. Long-term exposure to high pesticide residues may contribute to allergies, digestive problems, hormonal imbalances, nervous system issues, and other health concerns. This is why more families today prefer farm-fresh vegetables, pesticide-free or chemical-safe vegetables, and trusted brands that deliver direct from local farmers.</p>
+
+                    <h2 class="blog-section-title">5. How Pesticides Affect Farmers</h2>
+                    <p>Farmers are actually the people most exposed to pesticides. During spraying, chemicals can enter the body through skin contact, breathing, or eyes. Without proper protection, farmers may experience:</p>
+                    <ul class="blog-list">
+                        <li>Headaches and dizziness</li>
+                        <li>Skin irritation and allergies</li>
+                        <li>Breathing problems</li>
+                        <li>Long-term health complications</li>
+                    </ul>
+                    <p>Many small farmers spray pesticides without masks, gloves, or protective equipment due to cost and lack of awareness. Educating farmers on proper personal protective equipment (PPE) and safer spraying techniques is a critical part of sustainable agriculture.</p>
+
+                    <h2 class="blog-section-title">6. Can Washing Remove Pesticides?</h2>
+                    <div class="blog-image-wrapper">
+                        <img src="images/blog_cooking_fresh.png"
+                            alt="Cooking with washed, fresh vegetables" width="800" height="500">
+                        <div class="blog-image-caption">Proper washing helps remove surface residues, but responsible farming remains the first line of defense.</div>
+                    </div>
+                    <p>Washing vegetables properly can help reduce some surface pesticide residues. Useful methods include:</p>
+                    <ul class="blog-list">
+                        <li>Washing under running water for at least 30 seconds</li>
+                        <li>Soaking vegetables in a mild salt water solution</li>
+                        <li>Using a diluted baking soda solution</li>
+                        <li>Peeling certain vegetables when appropriate</li>
+                    </ul>
+                    <p>However, some systemic pesticides can enter inside the plant tissue, which means washing alone may not remove everything completely. That is why responsible, safe farming practices are much more important than relying only on washing methods at home.</p>
+
+                    <h2 class="blog-section-title">7. The Need for Balanced Farming</h2>
+                    <p>Completely avoiding pesticides in farming can be difficult, especially for crops that are highly vulnerable to pests and diseases. The real solution is not blind overuse or complete avoidance — it is responsible and balanced usage. Modern sustainable farming focuses on:</p>
+                    <ul class="blog-list">
+                        <li>Minimal pesticide usage and Integrated Pest Management (IPM)</li>
+                        <li>Safe spraying methods and dosage control</li>
+                        <li>Strict adherence to proper pre-harvest waiting periods</li>
+                        <li>Farmer training and education</li>
+                        <li>Regular residue monitoring</li>
+                        <li>Transparent farming practices</li>
+                    </ul>
+                    <p>At Kshetriva Farms, we believe safe and responsible farming is the future of healthy food systems.</p>
+
+                    <h2 class="blog-section-title">Conclusion</h2>
+                    <div class="blog-quote">
+                        "Choosing fresh, responsibly grown vegetables is not only good for taste and health — it also supports safer conditions for our farmers and protects our environment."
+                    </div>
+                    <p>Pesticides themselves are not the only issue — improper usage is the real problem. When used responsibly and carefully, crops can be protected, farmers can reduce losses, and consumers can receive safer vegetables. As awareness grows, more customers in Hyderabad are choosing farm-direct brands that focus on freshness, transparency, and safe, chemical-free farming practices. Healthy farming starts with informed choices — both for farmers and consumers.</p>
+
+                    <p style="font-weight: 700; color: var(--primary-color); text-align: center; font-size: 1.2rem; margin-top: 30px;">
+                        🌱 Safe farming. Healthy families. Empowered farmers. 🌱
+                    </p>
+
+                    <div class="blog-link-wrapper" style="margin-top: 40px;">
+                        <a href="#freshness" class="blog-internal-link" id="linkToBlog1">
+                            <i class="fa-solid fa-arrow-left"></i> Read: Why Farm-Fresh Vegetables Last Longer
+                        </a>
+                    </div>
                 </div>
-
-                <p>Fresh vegetables start losing freshness soon after they are harvested. In traditional markets,
-                    vegetables often travel through many stages before reaching your table:</p>
-
-                <div class="blog-quote"
-                    style="border-left-color: var(--primary-color); background-color: rgba(46,125,50,0.02); font-style: normal; font-weight: normal;">
-                    <strong style="color: var(--primary-color);">Traditional Sourcing Chain:</strong><br>
-                    Farmer &rarr; Wholesale Market &rarr; Storage &rarr; Retail Shop &rarr; Customer
-                </div>
-
-                <p>This traditional process can take several days. By the time the vegetables reach your kitchen, they
-                    may already be losing moisture, flavor, and essential nutrients. Farm-fresh vegetables reach
-                    customers much faster, which directly helps them stay fresh for more days in your refrigerator.</p>
-
-                <div class="blog-link-wrapper">
-                    <a href="index.html#products" class="blog-internal-link" id="blogCtaLink1">
-                        Browse our fresh, farm-to-table catalog <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <h2 class="blog-section-title">2. Less Handling Means Less Damage</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_hand_tomatoes.jpg"
-                        alt="Kshetriva Farms quality control expert carefully inspecting harvested crops to prevent handling damage"
-                        width="800" height="500">
-                    <div class="blog-image-caption">Every single item is thoroughly inspected by the Kshetriva Farms
-                        quality team to minimize handling damage.</div>
-                </div>
-
-                <p>Vegetables become damaged when they are handled too many times during loading, unloading, and
-                    transport. Even small scratches, pressure marks, or bruising can break the vegetable's protective
-                    outer skin, making them spoil and mold much faster.</p>
-
-                <p>Farm-fresh vegetables usually go through fewer middle steps, meaning less physical handling. Because
-                    we deliver direct, they stay:</p>
-                <ul class="blog-list">
-                    <li>Cleaner and untouched by dozens of hands</li>
-                    <li>Fresher due to minimal atmospheric exposure</li>
-                    <li>Firmer with no bruising from rough sorting</li>
-                    <li>Healthier and visually pristine</li>
-                </ul>
-                <p>Fewer touchpoints dramatically minimize transport shock and maintain the vegetable's natural quality.
-                </p>
-
-                <h2 class="blog-section-title">3. Better Moisture and Natural Freshness</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_market_cart.jpg"
-                        alt="Crisp and juicy vegetables from Kshetriva Farms showing natural hydration" width="800"
-                        height="500">
-                    <div class="blog-image-caption">Farm-fresh greens from Kshetriva Farms naturally retain high
-                        moisture levels.</div>
-                </div>
-
-                <p>Freshly harvested vegetables naturally contain more moisture. This is why farm-fresh vegetables often
-                    look:</p>
-                <ul class="blog-list">
-                    <li>Bright in color</li>
-                    <li>Crisp to the touch</li>
-                    <li>Juicy inside</li>
-                    <li>Full of life and natural flavor</li>
-                </ul>
-                <p>When vegetables stay in cold storage or open baskets for long periods, they slowly dehydrate and lose
-                    water. That’s why older vegetables become soft, wrinkled, and dry very quickly once you buy them.
-                    Farm-fresh vegetables retain their natural hydration, extending their shelf-life at home.</p>
-
-                <h2 class="blog-section-title">4. Proper Selection Improves Shelf Life</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_farmer_pick.png"
-                        alt="Farmers harvesting crops at Kshetriva Farms to ensure proper selection" width="800"
-                        height="500">
-                    <div class="blog-image-caption">Farmers at Kshetriva Farms harvesting crops at peak ripeness to
-                        optimize shelf life.</div>
-                </div>
-
-                <p>At Kshetriva Farms, vegetables are carefully selected before delivery. Our harvesting and packaging
-                    processes ensure that only high-quality produce is packed for delivery. Good-quality, unblemished
-                    vegetables naturally stay fresh for longer when stored properly at home. Fresh produce also helps
-                    families reduce food waste because they can use the vegetables over several days without quick
-                    spoilage.</p>
-
-                <h2 class="blog-section-title">5. Better for Health and Daily Cooking</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/blog_cooking_fresh.png"
-                        alt="Preservative-free red tomatoes from Kshetriva Farms, ready for daily cooking" width="800"
-                        height="500">
-                    <div class="blog-image-caption">Bright, ripe, and preservative-free vegetables from Kshetriva Farms,
-                        perfect for healthy daily cooking.</div>
-                </div>
-
-                <p>When vegetables stay fresh longer, they transform your daily dining experience:</p>
-                <ul class="blog-list">
-                    <li>Meals taste noticeably better and more vibrant</li>
-                    <li>Cooking becomes easier and more satisfying with crisp ingredients</li>
-                    <li>Nutrients and vitamins are better maintained and digested</li>
-                    <li>Families waste less food, saving money and helping the environment</li>
-                </ul>
-                <p>Ultimately, choosing fresh vegetables improves both health and convenience for the entire household.
-                </p>
-
-                <h2 class="blog-section-title">Conclusion</h2>
-                <div class="blog-image-wrapper">
-                    <img src="images/logo_nav_new.png" alt="Kshetriva Farms Logo"
-                        style="max-height: 140px; width: auto;">
-                    <div class="blog-image-caption">Kshetriva Farms — Better quality. Preservative-free. Longer
-                        freshness.</div>
-                </div>
-
-                <div class="blog-quote">
-                    "Choosing fresh vegetables is not only good for taste and health—it also helps reduce waste and
-                    improves your daily cooking experience."
-                </div>
-                <p>Farm-fresh vegetables last longer because they reach customers faster, go through less handling, and
-                    maintain their natural moisture and freshness. At Kshetriva Farms, we are committed to bringing
-                    fresh vegetables direct from farmers to your doorstep in Hyderabad, ensuring preservative-free
-                    quality and care.</p>
-
-                <p
-                    style="font-weight: 700; color: var(--primary-color); text-align: center; font-size: 1.2rem; margin-top: 30px;">
-                    🌱 Fresh vegetables. Better quality. Longer freshness. 🌱
-                </p>
             </article>
 
             <!-- Right Side: Sidebar -->
@@ -264,7 +392,13 @@
                     <h3>Related Articles</h3>
                     <ul class="sidebar-recent-posts" style="list-style: none; padding: 0; margin: 0;">
                         <li style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                            <a href="blog-pesticides.html" style="text-decoration: none; color: var(--text-color); font-weight: 600; font-size: 0.95rem; display: block; line-height: 1.4; transition: var(--transition);">
+                            <a href="#freshness" id="sidebarLink1" class="active-sidebar-link" style="text-decoration: none; color: var(--text-color); font-weight: 600; font-size: 0.95rem; display: block; line-height: 1.4; transition: var(--transition);">
+                                Why Farm-Fresh Vegetables Last Longer
+                            </a>
+                            <span style="font-size: 0.8rem; color: #888; display: block; margin-top: 4px;"><i class="fa-solid fa-calendar"></i> May 30, 2026</span>
+                        </li>
+                        <li>
+                            <a href="#pesticides" id="sidebarLink2" style="text-decoration: none; color: var(--text-color); font-weight: 600; font-size: 0.95rem; display: block; line-height: 1.4; transition: var(--transition);">
                                 How Much Pesticide Usage Is Safe in Vegetables?
                             </a>
                             <span style="font-size: 0.8rem; color: #888; display: block; margin-top: 4px;"><i class="fa-solid fa-calendar"></i> June 12, 2026</span>
@@ -360,7 +494,7 @@
     </div>
 
     <!-- Custom Script -->
-    <script src="blog.js?v=3.0"></script>
+    <script src="blog.js?v=3.1"></script>
 
     <!-- Register Service Worker -->
     <script>

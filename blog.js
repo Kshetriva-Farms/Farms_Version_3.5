@@ -146,6 +146,116 @@ function setupClipboardCopy(btnId) {
     }
 }
 
+// Blog Post Switcher logic
+function initBlogTabs() {
+    const tab1 = document.getElementById('tabBlog1');
+    const tab2 = document.getElementById('tabBlog2');
+    const post1 = document.getElementById('blogPost1');
+    const post2 = document.getElementById('blogPost2');
+    const heroTitle = document.getElementById('blogHeroTitle');
+    const heroMeta = document.getElementById('blogHeroMeta');
+    
+    // Sidebar related post links
+    const sidebarLink1 = document.getElementById('sidebarLink1');
+    const sidebarLink2 = document.getElementById('sidebarLink2');
+
+    if (!tab1 || !tab2 || !post1 || !post2) return;
+
+    const blogData = {
+        post1: {
+            title: "Why Farm-Fresh Vegetables Last Longer",
+            meta: `
+                <span><i class="fa-solid fa-calendar"></i> May 30, 2026</span>
+                <span><i class="fa-solid fa-user"></i> By Kshetriva Farms</span>
+                <span><i class="fa-solid fa-clock"></i> 4 Min Read</span>
+                <span><i class="fa-solid fa-leaf"></i> Freshness & Quality</span>
+            `,
+            pageTitle: "Why Farm-Fresh Vegetables Last Longer | Kshetriva Farms Blog"
+        },
+        post2: {
+            title: "How Much Pesticide Usage Is Safe in Vegetables?",
+            meta: `
+                <span><i class="fa-solid fa-calendar"></i> June 12, 2026</span>
+                <span><i class="fa-solid fa-user"></i> By Kshetriva Farms</span>
+                <span><i class="fa-solid fa-clock"></i> 5 Min Read</span>
+                <span><i class="fa-solid fa-leaf"></i> Pesticide Safety</span>
+            `,
+            pageTitle: "How Much Pesticide Usage Is Safe in Vegetables? | Kshetriva Farms Blog"
+        }
+    };
+
+    function switchBlog(postId, scroll = true) {
+        if (postId === 'post1') {
+            tab1.classList.add('active');
+            tab2.classList.remove('active');
+            post1.style.display = 'block';
+            post2.style.display = 'none';
+            if (heroTitle) heroTitle.textContent = blogData.post1.title;
+            if (heroMeta) heroMeta.innerHTML = blogData.post1.meta;
+            document.title = blogData.post1.pageTitle;
+            
+            if (sidebarLink1) sidebarLink1.classList.add('active-sidebar-link');
+            if (sidebarLink2) sidebarLink2.classList.remove('active-sidebar-link');
+            
+            if (scroll) {
+                const offset = document.querySelector('.blog-tabs-container').offsetTop - 100;
+                window.scrollTo({ top: offset, behavior: 'smooth' });
+            }
+        } else {
+            tab1.classList.remove('active');
+            tab2.classList.add('active');
+            post1.style.display = 'none';
+            post2.style.display = 'block';
+            if (heroTitle) heroTitle.textContent = blogData.post2.title;
+            if (heroMeta) heroMeta.innerHTML = blogData.post2.meta;
+            document.title = blogData.post2.pageTitle;
+            
+            if (sidebarLink1) sidebarLink1.classList.remove('active-sidebar-link');
+            if (sidebarLink2) sidebarLink2.classList.add('active-sidebar-link');
+
+            if (scroll) {
+                const offset = document.querySelector('.blog-tabs-container').offsetTop - 100;
+                window.scrollTo({ top: offset, behavior: 'smooth' });
+            }
+        }
+    }
+
+    tab1.addEventListener('click', () => {
+        window.location.hash = 'freshness';
+    });
+    tab2.addEventListener('click', () => {
+        window.location.hash = 'pesticides';
+    });
+    
+    if (sidebarLink1) {
+        sidebarLink1.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.hash = 'freshness';
+        });
+    }
+    if (sidebarLink2) {
+        sidebarLink2.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.hash = 'pesticides';
+        });
+    }
+
+    // Hash Navigation Check
+    function checkHash() {
+        const hash = window.location.hash;
+        if (hash === '#pesticides') {
+            switchBlog('post2', false);
+        } else if (hash === '#freshness') {
+            switchBlog('post1', false);
+        }
+    }
+
+    window.addEventListener('hashchange', checkHash);
+    
+    // Check hash on page load
+    checkHash();
+}
+
 // Initialize Page Modules on Dom Content Loaded
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Language Toggle listener
@@ -168,4 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Setup Clipboard Copies
     setupClipboardCopy('emailContactBtn');
     setupClipboardCopy('footerEmailBtn');
+
+    // 4. Initialize Blog Tabs Switcher
+    initBlogTabs();
 });
