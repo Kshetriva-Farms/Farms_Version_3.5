@@ -947,7 +947,8 @@ function renderProducts(category = 'all') {
 
         // Phase 1: Quantity options dropdown
         const qtyOptions = getQuantityOptions(rawProduct);
-        const selectedOpt = cartItem ? cartItem.optionValue : qtyOptions[0].value;
+        const defaultOpt = qtyOptions.find(o => o.value === '500g')?.value || qtyOptions[0].value;
+        const selectedOpt = cartItem ? cartItem.optionValue : defaultOpt;
         const selectedPrice = qtyOptions.find(o => o.value === selectedOpt)?.price || qtyOptions[0].price;
 
         let optionsHtml = qtyOptions.map(opt => {

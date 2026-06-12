@@ -363,6 +363,6 @@ For queries, orders, or partner programs:
 #### 4. ⚡ PWA Service Worker Invalidation
 - **Cache-Busting**: Added `blog-pesticides.html` to the cached assets list and bumped the Service Worker version to `kshetriva-farms-cache-v15` in `sw.js` to clear client caches immediately.
 
-
-
-
+#### 5. 🛒 Default Selected Quantity (500g Default for Regular Items)
+- **Default Dropdown Selection**: Refactored `script.js` to select the `500g` weight option by default for regular vegetables (if the option is available), falling back to the first available option for other product types.
+- **Cache-Busting & PWA Cache**: Bumped script version parameter inside `index.html` to `v=3.5` and incremented Service Worker cache name to `kshetriva-farms-cache-v16` in `sw.js` to force immediate update.
