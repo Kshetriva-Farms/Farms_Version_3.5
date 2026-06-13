@@ -366,3 +366,11 @@ For queries, orders, or partner programs:
 #### 5. 🛒 Default Selected Quantity (500g Default for Regular Items)
 - **Default Dropdown Selection**: Refactored `script.js` to select the `500g` weight option by default for regular vegetables (if the option is available), falling back to the first available option for other product types.
 - **Cache-Busting & PWA Cache**: Bumped script version parameter inside `index.html` to `v=3.5` and incremented Service Worker cache name to `kshetriva-farms-cache-v16` in `sw.js` to force immediate update.
+
+### 🗓️ June 13, 2026
+
+#### 1. ⏱️ Ordering Window Adjustment (Saturday 9:00 PM Close)
+- **Schedule Re-Alignment**: Configured the storefront ordering schedule close-window bounds in `script.js` to close on **Saturday at 9:00 PM** (closeHour: 21) instead of 1:00 PM.
+- **Bilingual Banners and Binders**: Updated static elements in `index.html` and dynamic translation templates in `script.js` (for English and Telugu) to notify buyers that ordering closes at Saturday 9 PM.
+- **Service Worker Cache-Busting**: Bumped script version parameter inside `index.html` to `v=3.6` and incremented Service Worker cache name to `kshetriva-farms-cache-v17` in `sw.js` to force immediate update on client devices.
+

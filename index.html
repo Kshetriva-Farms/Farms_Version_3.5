@@ -225,7 +225,7 @@
                 <div class="banner-status">
                     <div class="banner-status-dot"></div>
                     <div class="banner-text">
-                        <h4 id="bannerTitle">Order by Saturday 1 PM</h4>
+                        <h4 id="bannerTitle">Order by Saturday 9 PM</h4>
                         <p id="bannerSubtext">For Sunday delivery (Fresh from farm directly to your home)</p>
                     </div>
                 </div>
@@ -491,6 +491,15 @@
                         <div class="basket-progress-fill" id="basketProgressFill" style="width: 0%;"></div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Coupon Code Section -->
+            <div class="cart-coupon-section" id="cartCouponSection">
+                <div class="coupon-input-wrapper">
+                    <input type="text" id="couponInput" placeholder="Enter coupon code" />
+                    <button id="applyCouponBtn">Apply</button>
+                </div>
+                <div id="couponMessage" class="coupon-msg"></div>
             </div>
 
             <!-- Totals Breakdown -->
@@ -765,7 +774,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <!-- Custom Script -->
-    <script src="script.js?v=3.5"></script>
+    <script src="script.js?v=3.7"></script>
 
     <!-- Register Service Worker -->
     <script>

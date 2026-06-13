@@ -65,7 +65,7 @@ const ORDERING_SCHEDULE = {
     openDay: 5,      // Friday (0=Sunday)
     openHour: 12,    // 12:00 PM
     closeDay: 6,     // Saturday
-    closeHour: 13,   // 1:00 PM
+    closeHour: 21,   // 9:00 PM
     deliveryDay: 0   // Sunday
 };
 
@@ -324,7 +324,7 @@ const translations = {
         btnOutOfStock: "Out of Stock",
 
         // Phase 1: Ordering Window
-        bannerLiveTitle: "Order by Saturday 1 PM",
+        bannerLiveTitle: "Order by Saturday 9 PM",
         bannerLiveSubtext: "For Sunday delivery (Fresh from farm directly to your home)",
         bannerClosedTitle: "Ordering Opens Friday 12 PM",
         bannerClosedSubtext: "Browse our catalog and plan your weekly basket",
@@ -365,7 +365,14 @@ const translations = {
 
         // Phase 1: WhatsApp Message
         waDeliveryDay: "Sunday",
-        waPayment: "Cash on Delivery"
+        waPayment: "Cash on Delivery",
+
+        // Phase 3: Coupons
+        couponPlaceholder: "Enter coupon code",
+        couponApplyBtn: "Apply",
+        couponRemoveBtn: "Remove",
+        couponInvalid: "Invalid coupon code",
+        couponApplied: "Coupon '{code}' applied successfully!"
     },
     te: {
         logoText: "క్షేత్రీవ ఫార్మ్స్",
@@ -472,7 +479,7 @@ const translations = {
         outOfStock: "స్టాక్ లేదు",
         btnOutOfStock: "స్టాక్ లేదు",
 
-        bannerLiveTitle: "శనివారం 1 PM లోపు ఆర్డర్ చేయండి",
+        bannerLiveTitle: "శనివారం 9 PM లోపు ఆర్డర్ చేయండి",
         bannerLiveSubtext: "ఆదివారం డెలివరీ కోసం (పొలం నుండి నేరుగా మీ ఇంటికి)",
         bannerClosedTitle: "ఆర్డరింగ్ శుక్రవారం 12 PM న ప్రారంభం",
         bannerClosedSubtext: "మా క్యాటలాగ్ చూసి మీ వారపు బాస్కెట్ ప్లాన్ చేయండి",
@@ -505,7 +512,14 @@ const translations = {
         badgeFarmerPick: "⭐ రైతు ఎంపిక",
 
         waDeliveryDay: "ఆదివారం",
-        waPayment: "క్యాష్ ఆన్ డెలివరీ"
+        waPayment: "క్యాష్ ఆన్ డెలివరీ",
+
+        // Phase 3: Coupons
+        couponPlaceholder: "కూపన్ కోడ్ నమోదు చేయండి",
+        couponApplyBtn: "వర్తింపజేయి",
+        couponRemoveBtn: "తొలగించు",
+        couponInvalid: "చెల్లని కూపన్ కోడ్",
+        couponApplied: "కూపన్ '{code}' విజయవంతంగా వర్తింపజేయబడింది!"
     }
 };
 
@@ -729,6 +743,20 @@ function applyLanguage() {
     if (recClearBtn) recClearBtn.textContent = dict.recoveryBtnClear;
     const recResumeBtn = document.getElementById('recoveryResumeBtn');
     if (recResumeBtn) recResumeBtn.textContent = dict.recoveryBtnResume;
+
+    // Coupon translation binds
+    const couponInput = document.getElementById('couponInput');
+    if (couponInput) {
+        couponInput.placeholder = dict.couponPlaceholder || "Enter coupon code";
+    }
+    const applyCouponBtn = document.getElementById('applyCouponBtn');
+    if (applyCouponBtn) {
+        applyCouponBtn.textContent = appliedCoupon ? (dict.couponRemoveBtn || "Remove") : (dict.couponApplyBtn || "Apply");
+    }
+    const couponMessage = document.getElementById('couponMessage');
+    if (couponMessage && appliedCoupon) {
+        couponMessage.textContent = (dict.couponApplied || "Coupon '{code}' applied!").replace('{code}', appliedCoupon);
+    }
 }
 
 // Convert GitHub HTML view/edit image URLs to raw viewable URLs
@@ -1397,6 +1425,11 @@ function updateCartUI() {
 
     // Phase 2: Update Delivery Charges (Struck-off ₹69, Fixed ₹49)
     const cartDeliveryRow = document.getElementById('cartDeliveryRow');
+    let deliveryCharge = 49;
+    if (appliedCoupon === 'Delivery30') {
+        deliveryCharge = 30;
+    }
+
     if (cartDeliveryRow) {
         cartDeliveryRow.style.display = 'flex';
         const deliveryLabelEl = document.getElementById('deliveryLabel');
@@ -1405,12 +1438,16 @@ function updateCartUI() {
             deliveryLabelEl.textContent = dict.deliveryLabel || 'Delivery Charges:';
         }
         if (cartDeliverySumEl) {
-            cartDeliverySumEl.innerHTML = `<del style="color: #888; margin-right: 5px;">₹69</del> <span style="color: #2e7d32; font-weight: 600;">₹49</span>`;
+            if (appliedCoupon === 'Delivery30') {
+                cartDeliverySumEl.innerHTML = `<del style="color: #888; margin-right: 5px;">₹49</del> <span style="color: #2e7d32; font-weight: 600;">₹30</span> <span style="font-size: 0.75rem; color: #2e7d32; display: block; font-weight: 500; text-align: right;">(Delivery30)</span>`;
+            } else {
+                cartDeliverySumEl.innerHTML = `<del style="color: #888; margin-right: 5px;">₹69</del> <span style="color: #2e7d32; font-weight: 600;">₹49</span>`;
+            }
         }
     }
 
     const itemsTotal = finalTotal;
-    finalTotal = itemsTotal + 49;
+    finalTotal = itemsTotal + deliveryCharge;
     cartTotalSum.textContent = `₹${finalTotal}`;
 
     // Phase 1: Minimum order check - 3 products OR total > 99
@@ -1552,7 +1589,12 @@ function sendCartWhatsAppOrder() {
 
     message += `================================\n`;
 
-    const deliveryCharge = 49;
+    let deliveryCharge = 49;
+    let originalDeliveryDisplay = "~₹69~";
+    if (appliedCoupon === 'Delivery30') {
+        deliveryCharge = 30;
+        originalDeliveryDisplay = "~₹49~";
+    }
     let finalTotal = subtotal;
 
     if (currentTier) {
@@ -1562,12 +1604,12 @@ function sendCartWhatsAppOrder() {
         const pctLabel = Math.round(currentTier.discount * 100);
         message += isTe ? `ఉప మొత్తం: ₹${subtotal}\n` : `Subtotal: ₹${subtotal}\n`;
         message += isTe ? `బాస్కెట్ తగ్గింపు (${pctLabel}%): -₹${discountAmt}\n` : `Basket Discount (${pctLabel}%): -₹${discountAmt}\n`;
-        message += isTe ? `డెలివరీ ఛార్జీలు: ~₹69~ ₹${deliveryCharge}\n` : `Delivery Charges: ~₹69~ ₹${deliveryCharge}\n`;
+        message += isTe ? `డెలివరీ ఛార్జీలు: ${originalDeliveryDisplay} ₹${deliveryCharge}${appliedCoupon ? ' (' + appliedCoupon + ')' : ''}\n` : `Delivery Charges: ${originalDeliveryDisplay} ₹${deliveryCharge}${appliedCoupon ? ' (' + appliedCoupon + ')' : ''}\n`;
         message += isTe ? `*మొత్తం: ₹${finalTotal}*\n\n` : `*Total: ₹${finalTotal}*\n\n`;
     } else {
         finalTotal = subtotal + deliveryCharge;
         message += isTe ? `ఉప మొత్తం: ₹${subtotal}\n` : `Subtotal: ₹${subtotal}\n`;
-        message += isTe ? `డెలివరీ ఛార్జీలు: ~₹69~ ₹${deliveryCharge}\n` : `Delivery Charges: ~₹69~ ₹${deliveryCharge}\n`;
+        message += isTe ? `డెలివరీ ఛార్జీలు: ${originalDeliveryDisplay} ₹${deliveryCharge}${appliedCoupon ? ' (' + appliedCoupon + ')' : ''}\n` : `Delivery Charges: ${originalDeliveryDisplay} ₹${deliveryCharge}${appliedCoupon ? ' (' + appliedCoupon + ')' : ''}\n`;
         message += isTe ? `*మొత్తం చెల్లింపు: ₹${finalTotal}*\n\n` : `*Total Amount: ₹${finalTotal}*\n\n`;
     }
 
@@ -2217,12 +2259,74 @@ if (useFirebase && auth) {
 }
 
 
+// ===== Phase 3: Coupon Code Option =====
+let appliedCoupon = localStorage.getItem('kshetriva_coupon') || '';
+
+function initCouponLogic() {
+    const couponInput = document.getElementById('couponInput');
+    const applyCouponBtn = document.getElementById('applyCouponBtn');
+    const couponMessage = document.getElementById('couponMessage');
+
+    if (!couponInput || !applyCouponBtn || !couponMessage) return;
+
+    // Set initial input state if a coupon was already applied
+    if (appliedCoupon) {
+        couponInput.value = appliedCoupon;
+        couponInput.disabled = true;
+        
+        const dict = translations[currentLang];
+        couponMessage.textContent = (dict.couponApplied || "Coupon '{code}' applied!").replace('{code}', appliedCoupon);
+        couponMessage.className = "coupon-msg success";
+        applyCouponBtn.textContent = dict.couponRemoveBtn || "Remove";
+    }
+
+    applyCouponBtn.addEventListener('click', () => {
+        const dict = translations[currentLang];
+        if (appliedCoupon) {
+            // Remove coupon
+            appliedCoupon = '';
+            localStorage.removeItem('kshetriva_coupon');
+            couponInput.value = '';
+            couponInput.disabled = false;
+            couponMessage.style.display = 'none';
+            couponMessage.className = "coupon-msg";
+            applyCouponBtn.textContent = dict.couponApplyBtn || "Apply";
+            trackGA4Event('coupon_removed');
+            updateCartUI();
+        } else {
+            // Apply coupon
+            const code = couponInput.value.trim();
+            if (code === 'Delivery30') {
+                appliedCoupon = code;
+                localStorage.setItem('kshetriva_coupon', code);
+                couponInput.disabled = true;
+                couponMessage.textContent = (dict.couponApplied || "Coupon '{code}' applied!").replace('{code}', code);
+                couponMessage.className = "coupon-msg success";
+                applyCouponBtn.textContent = dict.couponRemoveBtn || "Remove";
+                trackGA4Event('coupon_applied', { coupon_code: code });
+                updateCartUI();
+            } else {
+                couponMessage.textContent = dict.couponInvalid || "Invalid coupon code";
+                couponMessage.className = "coupon-msg error";
+                trackGA4Event('coupon_invalid', { coupon_code: code });
+            }
+        }
+    });
+
+    couponInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            applyCouponBtn.click();
+        }
+    });
+}
+
 /* ==========================================================================
    Application Boot Initialization
    ========================================================================== */
 
 loadCart();
 applyLanguage();
+initCouponLogic();
 updateCartUI();
 renderProducts();
 checkHashRoute();
