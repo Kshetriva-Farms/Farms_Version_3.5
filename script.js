@@ -2255,7 +2255,6 @@ function deleteLead(leadId) {
 // ===== System Settings and Manual Ordering Window Overrides =====
 
 function loadManualWindowState() {
-    if (useFirebase && db) return; // Managed by Firestore snapshot listener
     const stored = localStorage.getItem('kshetriva_manual_window');
     if (stored) {
         try {
@@ -2272,7 +2271,14 @@ function saveManualWindowState() {
             .then(() => {
                 console.log("Manual window state synced to Firestore.");
             })
-            .catch(err => console.error("Error syncing manual window state to Firestore:", err));
+            .catch(err => {
+                console.warn("Error syncing manual window state to Firestore (falling back to LocalStorage):", err);
+                // Fallback to local storage if Firestore write fails (e.g. Permission Denied)
+                localStorage.setItem('kshetriva_manual_window', JSON.stringify(manualWindowState));
+                updateManualWindowUI();
+                updateOrderingWindowBanner();
+                updateCartUI();
+            });
     } else {
         localStorage.setItem('kshetriva_manual_window', JSON.stringify(manualWindowState));
         updateManualWindowUI();
@@ -2292,6 +2298,8 @@ function updateManualWindowUI() {
     }
     if (stateToggle) {
         stateToggle.checked = manualWindowState.overrideOpen;
+        // Physically disable input element to prevent direct keyboard/script modifications
+        stateToggle.disabled = !manualWindowState.overrideActive;
     }
     if (stateRow) {
         if (manualWindowState.overrideActive) {
@@ -2320,6 +2328,13 @@ function toggleManualOverride(checked) {
 }
 
 function toggleForcedWindowState(checked) {
+    // Prevent changing state if manual control override is not active
+    if (!manualWindowState.overrideActive) {
+        console.warn("Cannot force window state: Manual Window Control is disabled.");
+        updateManualWindowUI(); // Sync checkbox state back to model
+        return;
+    }
+
     manualWindowState.overrideOpen = checked;
     
     // Log action
@@ -2666,7 +2681,17 @@ function updateAdminStats() {
         if (useFirebase && db) {
             db.collection("leads").get().then((snapshot) => {
                 totalLeadsEl.textContent = snapshot.size;
-            }).catch(err => console.error("Error fetching leads count:", err));
+            }).catch(err => {
+                console.warn("Error fetching leads count from Firestore, falling back to LocalStorage:", err);
+                const localLeads = localStorage.getItem('kshetriva_leads');
+                let count = 0;
+                if (localLeads) {
+                    try {
+                        count = JSON.parse(localLeads).length;
+                    } catch (e) {}
+                }
+                totalLeadsEl.textContent = count;
+            });
         } else {
             const localLeads = localStorage.getItem('kshetriva_leads');
             let count = 0;
@@ -2920,14 +2945,22 @@ if (useFirebase && db) {
     db.collection("metadata").doc("orderingWindow").onSnapshot((doc) => {
         if (doc.exists) {
             manualWindowState = doc.data();
+            updateManualWindowUI();
+            updateOrderingWindowBanner();
+            updateCartUI();
         } else {
-            manualWindowState = { overrideActive: false, overrideOpen: false };
+            // Fallback to local storage if document does not exist yet
+            loadManualWindowState();
+            updateManualWindowUI();
+            updateOrderingWindowBanner();
+            updateCartUI();
         }
+    }, (error) => {
+        console.warn("Firestore orderingWindow snap update failed (using LocalStorage fallback):", error);
+        loadManualWindowState();
         updateManualWindowUI();
         updateOrderingWindowBanner();
         updateCartUI();
-    }, (error) => {
-        console.error("Firestore orderingWindow snap update exception:", error);
     });
 }
 
