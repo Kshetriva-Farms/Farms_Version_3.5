@@ -2017,6 +2017,31 @@ function seedDatabase() {
 
 let whatsappTriggerSource = { type: 'chat' };
 
+// Dynamic Database Sync Status Indicator
+function updateAdminSyncStatus(status, details = "") {
+    const badge = document.getElementById('adminSyncBadge');
+    if (!badge) return;
+
+    if (status === 'live') {
+        badge.textContent = "🟢 Live Database Connected";
+        badge.style.background = "#e8f5e9";
+        badge.style.color = "#2e7d32";
+        badge.style.borderColor = "#c8e6c9";
+    } else if (status === 'error') {
+        badge.innerHTML = `⚠️ Database Error (Check Rules)`;
+        badge.title = details || "Database read/write failed. Check console and security rules.";
+        badge.style.background = "#fff3e0";
+        badge.style.color = "#e65100";
+        badge.style.borderColor = "#ffe0b2";
+    } else {
+        badge.innerHTML = `⚠️ Offline Mode (Local Only)`;
+        badge.title = "No database connection. Data is saved locally in this browser and will not sync with other devices.";
+        badge.style.background = "#ffebee";
+        badge.style.color = "#c62828";
+        badge.style.borderColor = "#ffcdd2";
+    }
+}
+
 // Open Details Modal and Pre-fill Cached Data
 function openWhatsappDetailsModal(type) {
     whatsappTriggerSource.type = type;
@@ -2212,14 +2237,17 @@ function renderAdminLeads() {
                 const leads = [];
                 snapshot.forEach(doc => leads.push(doc.data()));
                 showLeads(leads);
+                updateAdminSyncStatus('live');
             })
             .catch((err) => {
                 console.error("Error loading leads from Firestore:", err);
+                updateAdminSyncStatus('error', err.message);
                 // Fallback to local storage
                 const localLeads = localStorage.getItem('kshetriva_leads');
                 showLeads(localLeads ? JSON.parse(localLeads) : []);
             });
     } else {
+        updateAdminSyncStatus('offline');
         const localLeads = localStorage.getItem('kshetriva_leads');
         showLeads(localLeads ? JSON.parse(localLeads) : []);
     }
@@ -2491,13 +2519,16 @@ function renderAdminWindowLogs() {
                 const logs = [];
                 snapshot.forEach(doc => logs.push(doc.data()));
                 showLogs(logs);
+                updateAdminSyncStatus('live');
             })
             .catch((err) => {
                 console.error("Error loading logs from Firestore:", err);
+                updateAdminSyncStatus('error', err.message);
                 const localLogs = localStorage.getItem('kshetriva_window_logs');
                 showLogs(localLogs ? JSON.parse(localLogs) : []);
             });
     } else {
+        updateAdminSyncStatus('offline');
         const localLogs = localStorage.getItem('kshetriva_window_logs');
         showLogs(localLogs ? JSON.parse(localLogs) : []);
     }
@@ -2550,6 +2581,11 @@ function closeAdminLogin() {
 function openAdminDashboard() {
     document.getElementById('adminLoginModal').classList.remove('open');
     document.getElementById('adminDashboardOverlay').classList.add('open');
+    if (useFirebase && db) {
+        updateAdminSyncStatus('live');
+    } else {
+        updateAdminSyncStatus('offline');
+    }
     switchAdminTab('catalog');
 }
 
@@ -2681,8 +2717,10 @@ function updateAdminStats() {
         if (useFirebase && db) {
             db.collection("leads").get().then((snapshot) => {
                 totalLeadsEl.textContent = snapshot.size;
+                updateAdminSyncStatus('live');
             }).catch(err => {
                 console.warn("Error fetching leads count from Firestore, falling back to LocalStorage:", err);
+                updateAdminSyncStatus('error', err.message);
                 const localLeads = localStorage.getItem('kshetriva_leads');
                 let count = 0;
                 if (localLeads) {
