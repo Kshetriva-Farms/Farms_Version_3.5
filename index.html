@@ -589,13 +589,13 @@
                     <label for="adminEmail"
                         style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem;">Email
                         Address</label>
-                    <input type="email" id="adminEmail" required placeholder="admin@kshetrivafarms.com"
+                    <input type="email" id="adminEmail" required placeholder="User Name"
                         style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
                 </div>
                 <div class="form-group" style="text-align: left; margin-bottom: 15px;">
                     <label for="adminPassword"
                         style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem;">Password</label>
-                    <input type="password" id="adminPassword" required placeholder="••••••••"
+                    <input type="password" id="adminPassword" required placeholder="••••••••••••"
                         style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
                 </div>
                 <div class="admin-login-error" id="adminLoginError"
@@ -753,7 +753,8 @@
                         <div class="admin-stat-card"
                             style="flex: 2; padding: 20px; align-items: center; justify-content: flex-start; flex-direction: row; gap: 15px;">
                             <div class="stat-icon" style="color: var(--accent-color); background: rgba(245,124,0,0.1);">
-                                <i class="fa-solid fa-circle-info"></i></div>
+                                <i class="fa-solid fa-circle-info"></i>
+                            </div>
                             <p
                                 style="font-size: 0.88rem; color: var(--text-light); line-height: 1.5; margin: 0; text-align: left;">
                                 Customer details (Name, Phone, Locality) are collected when they click the WhatsApp
@@ -787,46 +788,63 @@
                 <div id="adminSettingsSection" style="display: none;">
                     <div class="admin-stats-row">
                         <!-- Manual Override Control Card -->
-                        <div class="admin-stat-card" style="flex: 1.2; flex-direction: column; align-items: stretch; padding: 25px; gap: 20px;">
-                            <h4 style="font-size: 1.2rem; color: var(--primary-color); border-bottom: 2px solid #e8f5e9; padding-bottom: 8px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <div class="admin-stat-card"
+                            style="flex: 1.2; flex-direction: column; align-items: stretch; padding: 25px; gap: 20px;">
+                            <h4
+                                style="font-size: 1.2rem; color: var(--primary-color); border-bottom: 2px solid #e8f5e9; padding-bottom: 8px; margin: 0; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-clock"></i> Manual Ordering Override
                             </h4>
-                            
+
                             <!-- Override Toggle Switch Row -->
-                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 12px 18px; border-radius: 12px; border: 1px solid #f0f0f0;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 12px 18px; border-radius: 12px; border: 1px solid #f0f0f0;">
                                 <div>
-                                    <strong style="display: block; font-size: 0.95rem; color: var(--text-dark);">Manual Window Control</strong>
-                                    <span style="font-size: 0.8rem; color: var(--text-light);">Override Friday-Saturday auto schedule</span>
+                                    <strong style="display: block; font-size: 0.95rem; color: var(--text-dark);">Manual
+                                        Window Control</strong>
+                                    <span style="font-size: 0.8rem; color: var(--text-light);">Override Friday-Saturday
+                                        auto schedule</span>
                                 </div>
                                 <label class="stock-toggle">
-                                    <input type="checkbox" id="settingOverrideToggle" onchange="toggleManualOverride(this.checked)">
+                                    <input type="checkbox" id="settingOverrideToggle"
+                                        onchange="toggleManualOverride(this.checked)">
                                     <span class="stock-slider"></span>
                                 </label>
                             </div>
 
                             <!-- Open/Closed State Switch Row -->
-                            <div id="settingWindowStateRow" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 12px 18px; border-radius: 12px; border: 1px solid #f0f0f0; opacity: 0.5; pointer-events: none; transition: var(--transition);">
+                            <div id="settingWindowStateRow"
+                                style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02); padding: 12px 18px; border-radius: 12px; border: 1px solid #f0f0f0; opacity: 0.5; pointer-events: none; transition: var(--transition);">
                                 <div>
-                                    <strong style="display: block; font-size: 0.95rem; color: var(--text-dark);">Force Store State</strong>
-                                    <span style="font-size: 0.8rem; color: var(--text-light);" id="settingWindowStateLabel">Closed (Forced)</span>
+                                    <strong style="display: block; font-size: 0.95rem; color: var(--text-dark);">Force
+                                        Store State</strong>
+                                    <span style="font-size: 0.8rem; color: var(--text-light);"
+                                        id="settingWindowStateLabel">Closed (Forced)</span>
                                 </div>
                                 <label class="stock-toggle">
-                                    <input type="checkbox" id="settingWindowStateToggle" onchange="toggleForcedWindowState(this.checked)">
+                                    <input type="checkbox" id="settingWindowStateToggle"
+                                        onchange="toggleForcedWindowState(this.checked)">
                                     <span class="stock-slider"></span>
                                 </label>
                             </div>
                         </div>
 
                         <!-- Info Card -->
-                        <div class="admin-stat-card" style="flex: 1.5; padding: 25px; align-items: flex-start; flex-direction: row; gap: 15px;">
-                            <div class="stat-icon" style="color: var(--primary-color); background: rgba(46,125,50,0.1);"><i class="fa-solid fa-gears"></i></div>
+                        <div class="admin-stat-card"
+                            style="flex: 1.5; padding: 25px; align-items: flex-start; flex-direction: row; gap: 15px;">
+                            <div class="stat-icon"
+                                style="color: var(--primary-color); background: rgba(46,125,50,0.1);"><i
+                                    class="fa-solid fa-gears"></i></div>
                             <div style="text-align: left;">
-                                <h4 style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--earthy-brown);">Control Panel Guidelines</h4>
-                                <p style="font-size: 0.85rem; color: var(--text-light); line-height: 1.5; margin: 0 0 8px 0;">
-                                    When <strong>Manual Window Control</strong> is enabled, the store ignores the automated weekly timer schedule (Friday 12 PM opening, Saturday 9 PM closing).
+                                <h4 style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--earthy-brown);">Control
+                                    Panel Guidelines</h4>
+                                <p
+                                    style="font-size: 0.85rem; color: var(--text-light); line-height: 1.5; margin: 0 0 8px 0;">
+                                    When <strong>Manual Window Control</strong> is enabled, the store ignores the
+                                    automated weekly timer schedule (Friday 12 PM opening, Saturday 9 PM closing).
                                 </p>
                                 <p style="font-size: 0.85rem; color: var(--text-light); line-height: 1.5; margin: 0;">
-                                    Use the <strong>Force Store State</strong> toggle to manually open (green) or close (red) the catalog checkout window for all storefront users.
+                                    Use the <strong>Force Store State</strong> toggle to manually open (green) or close
+                                    (red) the catalog checkout window for all storefront users.
                                 </p>
                             </div>
                         </div>
@@ -834,7 +852,8 @@
 
                     <!-- Logs Table -->
                     <div style="margin-top: 30px;">
-                        <h4 style="font-size: 1.2rem; color: var(--primary-color); margin-bottom: 15px; text-align: left; display: flex; align-items: center; gap: 8px;">
+                        <h4
+                            style="font-size: 1.2rem; color: var(--primary-color); margin-bottom: 15px; text-align: left; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-list-check"></i> State Change History (Latest 25)
                         </h4>
                         <div class="admin-table-container" style="overflow-x: auto;">
