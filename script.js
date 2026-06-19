@@ -69,6 +69,9 @@ const ORDERING_SCHEDULE = {
     deliveryDay: 0   // Sunday
 };
 
+// Global Ordering Window Override State
+let manualWindowState = { overrideActive: false, overrideOpen: false };
+
 // ===== Phase 1: Minimum Order =====
 const MINIMUM_ORDER = 0; // Removed/disabled (changed from 199)
 
@@ -1204,6 +1207,10 @@ function getNextTier(uniqueItemCount) {
 
 // ===== Phase 1: Ordering Window =====
 function isOrderingWindowOpen() {
+    if (manualWindowState && manualWindowState.overrideActive) {
+        return manualWindowState.overrideOpen;
+    }
+
     const now = new Date();
     const day = now.getDay();
     const hour = now.getHours();
@@ -1215,11 +1222,15 @@ function isOrderingWindowOpen() {
 }
 
 function getWindowCountdown() {
+    const isOpen = isOrderingWindowOpen();
+    if (manualWindowState && manualWindowState.overrideActive) {
+        return { days: 0, hours: 0, mins: 0, isOpen };
+    }
+
     const now = new Date();
     const day = now.getDay();
     const hour = now.getHours();
     const { openDay, openHour, closeDay, closeHour } = ORDERING_SCHEDULE;
-    const isOpen = isOrderingWindowOpen();
 
     let targetDate = new Date(now);
     if (isOpen) {
@@ -1253,23 +1264,38 @@ function updateOrderingWindowBanner() {
     const dict = translations[currentLang];
     const { days, hours, mins, isOpen } = getWindowCountdown();
     
-    let timerText = "";
-    if (days > 0) {
-        timerText = `${days}d ${hours}h ${mins}m`;
+    if (manualWindowState && manualWindowState.overrideActive) {
+        const isTe = currentLang === 'te';
+        if (isOpen) {
+            banner.classList.remove('closed');
+            titleEl.textContent = isTe ? "ఆర్డరింగ్ ఓపెన్ లో ఉంది" : "Ordering is Open";
+            subtextEl.textContent = isTe ? "అడ్మిన్ మాన్యువల్ ఓవర్‌రైడ్ యాక్టివ్‌గా ఉంది. మీరు ఇప్పుడు ఆర్డర్ చేయవచ్చు." : "Manual admin override active. You can place your orders now.";
+            countdownEl.textContent = isTe ? "స్థితి: ఓపెన్ (మాన్యువల్)" : "Status: Open (Manual)";
+        } else {
+            banner.classList.add('closed');
+            titleEl.textContent = isTe ? "ఆర్డరింగ్ క్లోజ్ చేయబడింది" : "Ordering is Closed";
+            subtextEl.textContent = isTe ? "అడ్మిన్ మాన్యువల్ ఓవర్‌రైడ్ యాక్టివ్‌గా ఉంది. దయచేసి తర్వాత ప్రయత్నించండి." : "Manual admin override active. Please check back later.";
+            countdownEl.textContent = isTe ? "స్థితి: క్లోజ్డ్ (మాన్యువల్)" : "Status: Closed (Manual)";
+        }
     } else {
-        timerText = `${hours}h ${mins}m`;
-    }
+        let timerText = "";
+        if (days > 0) {
+            timerText = `${days}d ${hours}h ${mins}m`;
+        } else {
+            timerText = `${hours}h ${mins}m`;
+        }
 
-    if (isOpen) {
-        banner.classList.remove('closed');
-        titleEl.textContent = dict.bannerLiveTitle;
-        subtextEl.textContent = dict.bannerLiveSubtext;
-        countdownEl.textContent = `${dict.bannerClosesIn} ${timerText}`;
-    } else {
-        banner.classList.add('closed');
-        titleEl.textContent = dict.bannerClosedTitle;
-        subtextEl.textContent = dict.bannerClosedSubtext;
-        countdownEl.textContent = `${dict.bannerOpensIn} ${timerText}`;
+        if (isOpen) {
+            banner.classList.remove('closed');
+            titleEl.textContent = dict.bannerLiveTitle;
+            subtextEl.textContent = dict.bannerLiveSubtext;
+            countdownEl.textContent = `${dict.bannerClosesIn} ${timerText}`;
+        } else {
+            banner.classList.add('closed');
+            titleEl.textContent = dict.bannerClosedTitle;
+            subtextEl.textContent = dict.bannerClosedSubtext;
+            countdownEl.textContent = `${dict.bannerOpensIn} ${timerText}`;
+        }
     }
 
     // Update harvest date
@@ -2092,22 +2118,35 @@ function cleanupFirestoreLeads() {
 function switchAdminTab(tabName) {
     const tabCatalogBtn = document.getElementById('adminTabCatalogBtn');
     const tabLeadsBtn = document.getElementById('adminTabLeadsBtn');
+    const tabSettingsBtn = document.getElementById('adminTabSettingsBtn');
     const catalogSection = document.getElementById('adminCatalogSection');
     const leadsSection = document.getElementById('adminLeadsSection');
+    const settingsSection = document.getElementById('adminSettingsSection');
     const addNewProductBtn = document.querySelector('.admin-header-actions button[onclick="openProductFormModal()"]');
     
+    // Reset all tabs active state
+    if (tabCatalogBtn) tabCatalogBtn.classList.remove('active');
+    if (tabLeadsBtn) tabLeadsBtn.classList.remove('active');
+    if (tabSettingsBtn) tabSettingsBtn.classList.remove('active');
+    
+    // Hide all sections
+    if (catalogSection) catalogSection.style.display = 'none';
+    if (leadsSection) leadsSection.style.display = 'none';
+    if (settingsSection) settingsSection.style.display = 'none';
+    
+    if (addNewProductBtn) addNewProductBtn.style.display = 'none';
+
     if (tabName === 'leads') {
-        if (tabCatalogBtn) tabCatalogBtn.classList.remove('active');
         if (tabLeadsBtn) tabLeadsBtn.classList.add('active');
-        if (catalogSection) catalogSection.style.display = 'none';
         if (leadsSection) leadsSection.style.display = 'block';
-        if (addNewProductBtn) addNewProductBtn.style.display = 'none';
         renderAdminLeads();
+    } else if (tabName === 'settings') {
+        if (tabSettingsBtn) tabSettingsBtn.classList.add('active');
+        if (settingsSection) settingsSection.style.display = 'block';
+        renderAdminSettings();
     } else {
         if (tabCatalogBtn) tabCatalogBtn.classList.add('active');
-        if (tabLeadsBtn) tabLeadsBtn.classList.remove('active');
         if (catalogSection) catalogSection.style.display = 'block';
-        if (leadsSection) leadsSection.style.display = 'none';
         if (addNewProductBtn) addNewProductBtn.style.display = 'inline-block';
         renderAdminProducts();
     }
@@ -2210,6 +2249,242 @@ function deleteLead(leadId) {
             renderAdminLeads();
             updateAdminStats();
         }
+    }
+}
+
+// ===== System Settings and Manual Ordering Window Overrides =====
+
+function loadManualWindowState() {
+    if (useFirebase && db) return; // Managed by Firestore snapshot listener
+    const stored = localStorage.getItem('kshetriva_manual_window');
+    if (stored) {
+        try {
+            manualWindowState = JSON.parse(stored);
+        } catch (e) {
+            console.error("Error parsing local manual window state:", e);
+        }
+    }
+}
+
+function saveManualWindowState() {
+    if (useFirebase && db) {
+        db.collection("metadata").doc("orderingWindow").set(manualWindowState)
+            .then(() => {
+                console.log("Manual window state synced to Firestore.");
+            })
+            .catch(err => console.error("Error syncing manual window state to Firestore:", err));
+    } else {
+        localStorage.setItem('kshetriva_manual_window', JSON.stringify(manualWindowState));
+        updateManualWindowUI();
+        updateOrderingWindowBanner();
+        updateCartUI();
+    }
+}
+
+function updateManualWindowUI() {
+    const overrideToggle = document.getElementById('settingOverrideToggle');
+    const stateToggle = document.getElementById('settingWindowStateToggle');
+    const stateRow = document.getElementById('settingWindowStateRow');
+    const stateLabel = document.getElementById('settingWindowStateLabel');
+
+    if (overrideToggle) {
+        overrideToggle.checked = manualWindowState.overrideActive;
+    }
+    if (stateToggle) {
+        stateToggle.checked = manualWindowState.overrideOpen;
+    }
+    if (stateRow) {
+        if (manualWindowState.overrideActive) {
+            stateRow.style.opacity = '1';
+            stateRow.style.pointerEvents = 'auto';
+        } else {
+            stateRow.style.opacity = '0.5';
+            stateRow.style.pointerEvents = 'none';
+        }
+    }
+    if (stateLabel) {
+        stateLabel.textContent = manualWindowState.overrideOpen ? "Open (Forced)" : "Closed (Forced)";
+    }
+}
+
+function toggleManualOverride(checked) {
+    manualWindowState.overrideActive = checked;
+    
+    // Log action
+    let actionStr = checked 
+        ? (manualWindowState.overrideOpen ? "Manual Override Enabled: Forced Open" : "Manual Override Enabled: Forced Closed")
+        : "Manual Override Disabled: Auto Schedule Restored";
+        
+    addWindowLog(actionStr, manualWindowState.overrideOpen);
+    saveManualWindowState();
+}
+
+function toggleForcedWindowState(checked) {
+    manualWindowState.overrideOpen = checked;
+    
+    // Log action
+    let actionStr = checked 
+        ? "Manual State Changed: Forced Open" 
+        : "Manual State Changed: Forced Closed";
+        
+    addWindowLog(actionStr, checked);
+    saveManualWindowState();
+}
+
+function addWindowLog(action, stateVal) {
+    const timestamp = new Date().toISOString();
+    
+    // Determine user
+    let userStr = "Mock Admin";
+    if (useFirebase && auth && auth.currentUser) {
+        userStr = auth.currentUser.email || auth.currentUser.uid;
+    }
+    
+    const logEntry = {
+        id: Date.now().toString(),
+        action: action,
+        state: stateVal ? "open" : "closed",
+        timestamp: timestamp,
+        user: userStr
+    };
+    
+    if (useFirebase && db) {
+        db.collection("window_logs").doc(logEntry.id).set(logEntry)
+            .then(() => {
+                console.log("Window state log saved to Firestore.");
+                cleanupFirestoreWindowLogs(); // Keep only latest 25 logs
+            })
+            .catch((err) => {
+                console.error("Failed to save log to Firestore, falling back to LocalStorage:", err);
+                saveWindowLogToLocalStorage(logEntry);
+            });
+    } else {
+        saveWindowLogToLocalStorage(logEntry);
+    }
+}
+
+function saveWindowLogToLocalStorage(logEntry) {
+    let logs = [];
+    const localLogs = localStorage.getItem('kshetriva_window_logs');
+    if (localLogs) {
+        try {
+            logs = JSON.parse(localLogs);
+        } catch (e) {
+            console.error("Error parsing local logs:", e);
+        }
+    }
+    logs.unshift(logEntry);
+    logs = logs.slice(0, 25); // Cap at latest 25 logs
+    localStorage.setItem('kshetriva_window_logs', JSON.stringify(logs));
+    
+    // If settings section is open, reload it
+    const settingsSection = document.getElementById('adminSettingsSection');
+    if (settingsSection && settingsSection.style.display === 'block') {
+        renderAdminWindowLogs();
+    }
+}
+
+function cleanupFirestoreWindowLogs() {
+    if (!useFirebase || !db) return;
+    db.collection("window_logs").orderBy("timestamp", "desc").get()
+        .then((snapshot) => {
+            if (snapshot.size > 25) {
+                const batch = db.batch();
+                for (let i = 25; i < snapshot.size; i++) {
+                    batch.delete(snapshot.docs[i].ref);
+                }
+                batch.commit().then(() => {
+                    console.log("Firestore window logs batch deleted. Capped at 25.");
+                    // Render settings logs if settings is active
+                    const settingsSection = document.getElementById('adminSettingsSection');
+                    if (settingsSection && settingsSection.style.display === 'block') {
+                        renderAdminWindowLogs();
+                    }
+                }).catch(err => console.error("Firestore logs batch cleanup failed:", err));
+            } else {
+                // Render settings logs if settings is active even if no deletion was needed
+                const settingsSection = document.getElementById('adminSettingsSection');
+                if (settingsSection && settingsSection.style.display === 'block') {
+                    renderAdminWindowLogs();
+                }
+            }
+        })
+        .catch(err => console.error("Error fetching logs for cleanup:", err));
+}
+
+function renderAdminSettings() {
+    updateManualWindowUI();
+    renderAdminWindowLogs();
+}
+
+function renderAdminWindowLogs() {
+    const listContainer = document.getElementById('adminSettingsLogsList');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    const showLogs = (logsList) => {
+        if (!logsList || logsList.length === 0) {
+            listContainer.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #888; padding: 20px;">
+                        No manual window changes recorded yet.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        logsList.forEach((log) => {
+            const tr = document.createElement('tr');
+            
+            const dateStr = new Date(log.timestamp).toLocaleString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            // Action Badge
+            const isOverrideOn = log.action.includes("Enabled") || log.action.includes("Changed");
+            const actionBadgeClass = isOverrideOn ? "override-on" : "override-off";
+            const actionLabel = log.action.includes("Disabled") ? "Disable Override" : (log.action.includes("Changed") ? "State Change" : "Enable Override");
+            
+            // State Badge
+            const stateClass = log.state === "open" ? "open" : "closed";
+            const stateLabel = log.state === "open" ? "Open" : "Closed";
+
+            tr.innerHTML = `
+                <td style="font-size: 0.88rem; font-weight: 500; color: #555;">${dateStr}</td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span class="log-action-badge ${actionBadgeClass}">${actionLabel}</span>
+                        <span style="font-size: 0.78rem; color: #777;">${log.action}</span>
+                    </div>
+                </td>
+                <td><span class="log-state-badge ${stateClass}">${stateLabel}</span></td>
+                <td style="font-weight: 500; color: #555;">${log.user}</td>
+            `;
+            listContainer.appendChild(tr);
+        });
+    };
+
+    if (useFirebase && db) {
+        db.collection("window_logs").orderBy("timestamp", "desc").limit(25).get()
+            .then((snapshot) => {
+                const logs = [];
+                snapshot.forEach(doc => logs.push(doc.data()));
+                showLogs(logs);
+            })
+            .catch((err) => {
+                console.error("Error loading logs from Firestore:", err);
+                const localLogs = localStorage.getItem('kshetriva_window_logs');
+                showLogs(localLogs ? JSON.parse(localLogs) : []);
+            });
+    } else {
+        const localLogs = localStorage.getItem('kshetriva_window_logs');
+        showLogs(localLogs ? JSON.parse(localLogs) : []);
     }
 }
 
@@ -2640,6 +2915,22 @@ if (useFirebase && db) {
     });
 }
 
+// Firestore live real-time query listener for manual window override state
+if (useFirebase && db) {
+    db.collection("metadata").doc("orderingWindow").onSnapshot((doc) => {
+        if (doc.exists) {
+            manualWindowState = doc.data();
+        } else {
+            manualWindowState = { overrideActive: false, overrideOpen: false };
+        }
+        updateManualWindowUI();
+        updateOrderingWindowBanner();
+        updateCartUI();
+    }, (error) => {
+        console.error("Firestore orderingWindow snap update exception:", error);
+    });
+}
+
 // Live Auth status state persistence listener
 if (useFirebase && auth) {
     auth.onAuthStateChanged((user) => {
@@ -2724,6 +3015,7 @@ function initCouponLogic() {
    ========================================================================== */
 
 loadCart();
+loadManualWindowState();
 applyLanguage();
 initCouponLogic();
 updateCartUI();
