@@ -399,3 +399,7 @@ For queries, orders, or partner programs:
 - **Admin Leads Visualization**: Integrated a new tabbed workspace in the `#admin` Dashboard with a complete leads directory table, direct dial/chat links, and deletion triggers.
 - **Service Worker Cache-Busting**: Bumped script version parameter inside `index.html` to `v=3.8` and incremented Service Worker cache name to `kshetriva-farms-cache-v18` in `sw.js` to clear client caches immediately.
 
+#### 2. 🔐 Firestore Syncing & Connection Diagnosis Fix (Version 3.5.1)
+- **Optimal Firestore Security Rules**: Created [firestore.rules](file:///d:/Kshetriva_farms/Farms_Version_3.5/firestore.rules) to permit unauthenticated write access (`create` only) to the `leads` collection. This allows customers on all devices to successfully write leads to the shared Firestore DB instead of falling back to device-specific `localStorage`.
+- **Dynamic Database Sync Status**: Integrated a connection status indicator badge (`#adminSyncBadge`) in the Admin Dashboard header (modified [index.html](file:///d:/Kshetriva_farms/Farms_Version_3.5/index.html) and [script.js](file:///d:/Kshetriva_farms/Farms_Version_3.5/script.js)). Displays real-time database connection statuses (`Live Connected`, `Database Error (Check Rules)`, or `Offline Mode (Local Only)`) to simplify database connectivity troubleshooting.
+
