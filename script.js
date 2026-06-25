@@ -1,11 +1,11 @@
 // Firebase configuration keys (Placeholders until user replaces them in the Firebase console)
 const firebaseConfig = {
-    apiKey: "AIzaSyC4rquVj5Ug2ZdsDci7zHucEUXXVtaCPcI",
-    authDomain: "kshetriva-farms.firebaseapp.com",
-    projectId: "kshetriva-farms",
-    storageBucket: "kshetriva-farms.firebasestorage.app",
-    messagingSenderId: "332889493996",
-    appId: "1:332889493996:web:945cbd393438dc3aa9b0c9"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
 // Global Firebase Instance State
@@ -1703,7 +1703,7 @@ function sendCartWhatsAppOrder(name, phone, area) {
         basket_tier: currentTier ? currentTier.id : 'none'
     });
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/918374276995?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/YOUR_PHONE_NUMBER?text=${encoded}`, '_blank');
 }
 
 // Attach Event Listeners
@@ -2084,7 +2084,7 @@ function sendChatWhatsAppMessage(name, phone, area) {
         ? `నమస్తే క్షేత్రీవ ఫార్మ్స్,\nనా వివరాలు:\n👤 పేరు: ${name}\n📞 మొబైల్: ${phone}\n📍 ప్రాంతం: ${area}\n\nనేను మీతో చాట్ చేయాలనుకుంటున్నాను మరియు ఆర్డర్ చేయాలనుకుంటున్నాను.`
         : `Hello Kshetriva Farms,\nMy Details:\n👤 Name: ${name}\n📞 Phone: ${phone}\n📍 Area/Locality: ${area}\n\nI would like to enquire about ordering fresh vegetables.`;
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/918374276995?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/YOUR_PHONE_NUMBER?text=${encoded}`, '_blank');
 }
 
 // Database Lead Saving Logic

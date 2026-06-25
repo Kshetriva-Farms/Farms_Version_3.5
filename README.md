@@ -207,7 +207,7 @@ message += `*Total Amount:* ₹${totalSum}\n\n`;
 ```
 
 It is then fully encoded using `encodeURIComponent(message)` and bound to the URL:
-`https://wa.me/918374276995?text={encoded_message}`
+`https://wa.me/YOUR_PHONE_NUMBER?text={encoded_message}`
 
 ---
 
@@ -223,7 +223,7 @@ The custom stylesheet features premium responsiveness defined for standard viewp
 ## 📧 Contact & Support
 
 For queries, orders, or partner programs:
-- **Phone:** +91 83742 76995 | +91 90148 33202
+- **Phone:** +91 XXXXX XXXXX | +91 XXXXX XXXXX
 - **Email:** [farm@kshetrivafarms.com](mailto:farm@kshetrivafarms.com) (Click the envelope icon in the website footer to copy this address instantly!)
 - **Address:** H no. 5-134, Maryala, Bommalaramaram, Telangana - 508116, India
 - **Instagram:** [@kshetrivafarms](https://www.instagram.com/kshetrivafarms?igsh=dGV5d3I2d2Rhc2t2)
